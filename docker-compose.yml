@@ -1,0 +1,24 @@
+# Docker Compose for local development
+# Run: docker-compose up -d
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: review-bot-db
+    environment:
+      POSTGRES_USER: reviewer
+      POSTGRES_PASSWORD: reviewer123
+      POSTGRES_DB: code_review
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: review-bot-redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  pgdata:

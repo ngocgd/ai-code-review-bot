@@ -1,0 +1,107 @@
+// Prisma Schema for AI Code Review Bot
+// Run: npx prisma migrate dev
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+// DAY 3-4: Database Models
+// ============================================================
+
+/// GitHub repository connected to the bot
+model Repository {
+  id        String   @id @default(cuid())
+  owner     String   // GitHub org or user
+  name      String   // repo name
+  fullName  String   @unique // "owner/name"
+  installId Int?     // GitHub App installation ID
+  isActive  Boolean  @default(true)
+  config    Json?    // per-repo review config (rules, ignore patterns)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reviews Review[]
+
+  // TODO [Day 3]: Add indexes for common queries
+  @@index([owner])
+  @@index([isActive])
+}
+
+/// A code review performed on a PR
+model Review {
+  id           String       @id @default(cuid())
+  repositoryId String
+  repository   Repository   @relation(fields: [repositoryId], references: [id])
+  prNumber     Int          // PR number in GitHub
+  prTitle      String
+  prAuthor     String
+  commitSha    String       // HEAD commit SHA
+  status       ReviewStatus @default(PENDING)
+  summary      String?      // AI-generated summary
+  tokensUsed   Int          @default(0) // LLM token usage tracking
+  modelUsed    String?      // which model was used
+  processingMs Int?         // how long the review took
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  comments ReviewComment[]
+
+  // TODO [Day 3]: Add composite index for repo + PR lookup
+  @@unique([repositoryId, prNumber, commitSha])
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum ReviewStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+/// Individual review comment on a file/line
+model ReviewComment {
+  id        String   @id @default(cuid())
+  reviewId  String
+  review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  filePath  String   // file being reviewed
+  line      Int?     // line number (null = file-level comment)
+  severity  Severity @default(INFO)
+  category  String   // "security", "performance", "style", "bug", "suggestion"
+  body      String   // markdown comment body
+  postedToGh Boolean @default(false) // was it posted to GitHub?
+  createdAt DateTime @default(now())
+
+  // TODO [Day 3]: Index for filtering by severity
+  @@index([reviewId])
+  @@index([severity])
+}
+
+enum Severity {
+  CRITICAL // Must fix - security vulnerability, data loss
+  WARNING  // Should fix - bugs, performance issues
+  INFO     // Nice to have - style, suggestions
+}
+
+// ============================================================
+// DAY 14-15: RAG - Knowledge Base (Vector Search)
+// ============================================================
+
+/// Stored coding conventions & past reviews for RAG
+model KnowledgeChunk {
+  id         String   @id @default(cuid())
+  repoId     String?  // null = global knowledge
+  content    String   // text content
+  metadata   Json?    // source info (file, rule name, etc.)
+  // TODO [Day 14]: Add pgvector column for embeddings
+  // embedding  Unsupported("vector(1536)")?
+  createdAt  DateTime @default(now())
+
+  @@index([repoId])
+}
