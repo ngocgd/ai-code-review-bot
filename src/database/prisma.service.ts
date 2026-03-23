@@ -1,5 +1,5 @@
-import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { Injectable, OnModuleInit, OnModuleDestroy } from "@nestjs/common";
+import { PrismaClient } from "@prisma/client";
 
 // ============================================================
 // DAY 2: Prisma Service
@@ -22,12 +22,10 @@ export class PrismaService
   implements OnModuleInit, OnModuleDestroy
 {
   async onModuleInit() {
-    // TODO [Day 2]: Connect to database
-    // await this.$connect();
+    await this.$connect();
   }
 
   async onModuleDestroy() {
-    // TODO [Day 2]: Disconnect from database
-    // await this.$disconnect();
+    await this.$disconnect();
   }
 }

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  body { margin: 0; padding: 30px; background: white; font-family: 'Segoe UI', Arial, sans-serif; }
+</style>
+</head>
+<body>
+<svg width="1100" height="950" viewBox="0 0 1100 950">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="550" y="35" text-anchor="middle" font-size="22" font-weight="700" fill="#1a1a1a">🤖 AI Code Review Bot — 21-Day Roadmap</text>
+  <text x="550" y="58" text-anchor="middle" font-size="14" fill="#666">NestJS + TypeScript + PostgreSQL + Redis + LLM</text>
+
+  <!-- ========== PHASE 1 ========== -->
+  <rect x="30" y="85" width="1040" height="135" rx="12" fill="#e3f2fd" stroke="#1565c0" stroke-width="2"/>
+  <text x="55" y="110" font-size="16" font-weight="700" fill="#1565c0">📦 Phase 1: Foundation (Day 1-4)</text>
+
+  <!-- Day boxes -->
+  <rect x="55" y="125" width="220" height="75" rx="8" fill="white" stroke="#90caf9" stroke-width="1.5"/>
+  <text x="65" y="147" font-size="13" font-weight="700" fill="#1565c0">Day 1</text>
+  <text x="65" y="165" font-size="12" fill="#333">Project Setup</text>
+  <text x="65" y="182" font-size="11" fill="#666">NestJS + TypeScript + Health</text>
+
+  <rect x="295" y="125" width="220" height="75" rx="8" fill="white" stroke="#90caf9" stroke-width="1.5"/>
+  <text x="305" y="147" font-size="13" font-weight="700" fill="#1565c0">Day 2</text>
+  <text x="305" y="165" font-size="12" fill="#333">Docker + Database</text>
+  <text x="305" y="182" font-size="11" fill="#666">Prisma + PostgreSQL + Redis</text>
+
+  <rect x="535" y="125" width="220" height="75" rx="8" fill="white" stroke="#90caf9" stroke-width="1.5"/>
+  <text x="545" y="147" font-size="13" font-weight="700" fill="#1565c0">Day 3</text>
+  <text x="545" y="165" font-size="12" fill="#333">DB Models + CRUD</text>
+  <text x="545" y="182" font-size="11" fill="#666">Repository + Review models</text>
+
+  <rect x="775" y="125" width="220" height="75" rx="8" fill="white" stroke="#90caf9" stroke-width="1.5"/>
+  <text x="785" y="147" font-size="13" font-weight="700" fill="#1565c0">Day 4</text>
+  <text x="785" y="165" font-size="12" fill="#333">Testing Foundation</text>
+  <text x="785" y="182" font-size="11" fill="#666">Jest + TDD + Coverage</text>
+
+  <!-- Arrows between days -->
+  <line x1="275" y1="163" x2="295" y2="163" stroke="#1565c0" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="515" y1="163" x2="535" y2="163" stroke="#1565c0" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="755" y1="163" x2="775" y2="163" stroke="#1565c0" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Phase connector -->
+  <line x1="550" y1="220" x2="550" y2="250" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ========== PHASE 2 ========== -->
+  <rect x="30" y="250" width="1040" height="135" rx="12" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+  <text x="55" y="275" font-size="16" font-weight="700" fill="#2e7d32">🔗 Phase 2: GitHub Integration (Day 5-8)</text>
+
+  <rect x="55" y="290" width="220" height="75" rx="8" fill="white" stroke="#a5d6a7" stroke-width="1.5"/>
+  <text x="65" y="312" font-size="13" font-weight="700" fill="#2e7d32">Day 5</text>
+  <text x="65" y="330" font-size="12" fill="#333">Webhook Receiver</text>
+  <text x="65" y="347" font-size="11" fill="#666">HMAC SHA-256 Verify</text>
+
+  <rect x="295" y="290" width="220" height="75" rx="8" fill="white" stroke="#a5d6a7" stroke-width="1.5"/>
+  <text x="305" y="312" font-size="13" font-weight="700" fill="#2e7d32">Day 6</text>
+  <text x="305" y="330" font-size="12" fill="#333">Webhook Testing</text>
+  <text x="305" y="347" font-size="11" fill="#666">ngrok + GitHub App</text>
+
+  <rect x="535" y="290" width="220" height="75" rx="8" fill="white" stroke="#a5d6a7" stroke-width="1.5"/>
+  <text x="545" y="312" font-size="13" font-weight="700" fill="#2e7d32">Day 7</text>
+  <text x="545" y="330" font-size="12" fill="#333">GitHub API Read</text>
+  <text x="545" y="347" font-size="11" fill="#666">Fetch PR Diff + Files</text>
+
+  <rect x="775" y="290" width="220" height="75" rx="8" fill="white" stroke="#a5d6a7" stroke-width="1.5"/>
+  <text x="785" y="312" font-size="13" font-weight="700" fill="#2e7d32">Day 8</text>
+  <text x="785" y="330" font-size="12" fill="#333">GitHub API Write</text>
+  <text x="785" y="347" font-size="11" fill="#666">Post Review Comments</text>
+
+  <line x1="275" y1="328" x2="295" y2="328" stroke="#2e7d32" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="515" y1="328" x2="535" y2="328" stroke="#2e7d32" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="755" y1="328" x2="775" y2="328" stroke="#2e7d32" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <line x1="550" y1="385" x2="550" y2="415" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ========== PHASE 3 ========== -->
+  <rect x="30" y="415" width="1040" height="135" rx="12" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+  <text x="55" y="440" font-size="16" font-weight="700" fill="#e65100">🤖 Phase 3: AI Review Engine (Day 9-13)</text>
+
+  <rect x="35" y="455" width="185" height="75" rx="8" fill="white" stroke="#ffcc80" stroke-width="1.5"/>
+  <text x="45" y="477" font-size="13" font-weight="700" fill="#e65100">Day 9</text>
+  <text x="45" y="495" font-size="12" fill="#333">Diff Parser</text>
+  <text x="45" y="512" font-size="11" fill="#666">Parse + Filter + Lang</text>
+
+  <rect x="240" y="455" width="185" height="75" rx="8" fill="white" stroke="#ffcc80" stroke-width="1.5"/>
+  <text x="250" y="477" font-size="13" font-weight="700" fill="#e65100">Day 10</text>
+  <text x="250" y="495" font-size="12" fill="#333">Prompt Engineering</text>
+  <text x="250" y="512" font-size="11" fill="#666">JSON Schema Output</text>
+
+  <rect x="445" y="455" width="185" height="75" rx="8" fill="white" stroke="#ffcc80" stroke-width="1.5"/>
+  <text x="455" y="477" font-size="13" font-weight="700" fill="#e65100">Day 11</text>
+  <text x="455" y="495" font-size="12" fill="#333">LLM Integration</text>
+  <text x="455" y="512" font-size="11" fill="#666">Gemini + Ollama</text>
+
+  <rect x="650" y="455" width="185" height="75" rx="8" fill="white" stroke="#ffcc80" stroke-width="1.5"/>
+  <text x="660" y="477" font-size="13" font-weight="700" fill="#e65100">Day 12</text>
+  <text x="660" y="495" font-size="12" fill="#333">Queue System</text>
+  <text x="660" y="512" font-size="11" fill="#666">BullMQ + Redis</text>
+
+  <rect x="855" y="455" width="185" height="75" rx="8" fill="white" stroke="#ffcc80" stroke-width="1.5"/>
+  <text x="865" y="477" font-size="13" font-weight="700" fill="#e65100">Day 13 🔥</text>
+  <text x="865" y="495" font-size="12" fill="#333">Wire Everything!</text>
+  <text x="865" y="512" font-size="11" fill="#666">Full E2E Flow</text>
+
+  <line x1="220" y1="493" x2="240" y2="493" stroke="#e65100" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="425" y1="493" x2="445" y2="493" stroke="#e65100" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="630" y1="493" x2="650" y2="493" stroke="#e65100" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="835" y1="493" x2="855" y2="493" stroke="#e65100" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <line x1="550" y1="550" x2="550" y2="580" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ========== PHASE 4 ========== -->
+  <rect x="30" y="580" width="1040" height="135" rx="12" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="2"/>
+  <text x="55" y="605" font-size="16" font-weight="700" fill="#6a1b9a">📚 Phase 4: RAG + Polish (Day 14-18)</text>
+
+  <rect x="35" y="620" width="185" height="75" rx="8" fill="white" stroke="#ce93d8" stroke-width="1.5"/>
+  <text x="45" y="642" font-size="13" font-weight="700" fill="#6a1b9a">Day 14</text>
+  <text x="45" y="660" font-size="12" fill="#333">pgvector Setup</text>
+  <text x="45" y="677" font-size="11" fill="#666">Embeddings + Search</text>
+
+  <rect x="240" y="620" width="185" height="75" rx="8" fill="white" stroke="#ce93d8" stroke-width="1.5"/>
+  <text x="250" y="642" font-size="13" font-weight="700" fill="#6a1b9a">Day 15</text>
+  <text x="250" y="660" font-size="12" fill="#333">RAG Knowledge</text>
+  <text x="250" y="677" font-size="11" fill="#666">Enhanced Reviews</text>
+
+  <rect x="445" y="620" width="185" height="75" rx="8" fill="white" stroke="#ce93d8" stroke-width="1.5"/>
+  <text x="455" y="642" font-size="13" font-weight="700" fill="#6a1b9a">Day 16</text>
+  <text x="455" y="660" font-size="12" fill="#333">Dashboard API</text>
+  <text x="455" y="677" font-size="11" fill="#666">Stats + Pagination</text>
+
+  <rect x="650" y="620" width="185" height="75" rx="8" fill="white" stroke="#ce93d8" stroke-width="1.5"/>
+  <text x="660" y="642" font-size="13" font-weight="700" fill="#6a1b9a">Day 17</text>
+  <text x="660" y="660" font-size="12" fill="#333">Error Handling</text>
+  <text x="660" y="677" font-size="11" fill="#666">Logging + Observability</text>
+
+  <rect x="855" y="620" width="185" height="75" rx="8" fill="white" stroke="#ce93d8" stroke-width="1.5"/>
+  <text x="865" y="642" font-size="13" font-weight="700" fill="#6a1b9a">Day 18</text>
+  <text x="865" y="660" font-size="12" fill="#333">CI/CD</text>
+  <text x="865" y="677" font-size="11" fill="#666">GitHub Actions</text>
+
+  <line x1="220" y1="658" x2="240" y2="658" stroke="#6a1b9a" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="425" y1="658" x2="445" y2="658" stroke="#6a1b9a" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="630" y1="658" x2="650" y2="658" stroke="#6a1b9a" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="835" y1="658" x2="855" y2="658" stroke="#6a1b9a" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <line x1="550" y1="715" x2="550" y2="745" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ========== PHASE 5 ========== -->
+  <rect x="30" y="745" width="1040" height="135" rx="12" fill="#fce4ec" stroke="#c62828" stroke-width="2"/>
+  <text x="55" y="770" font-size="16" font-weight="700" fill="#c62828">🚀 Phase 5: Deploy + Demo (Day 19-21)</text>
+
+  <rect x="115" y="785" width="240" height="75" rx="8" fill="white" stroke="#ef9a9a" stroke-width="1.5"/>
+  <text x="125" y="807" font-size="13" font-weight="700" fill="#c62828">Day 19</text>
+  <text x="125" y="825" font-size="12" fill="#333">Dockerize App</text>
+  <text x="125" y="842" font-size="11" fill="#666">Multi-stage Build</text>
+
+  <rect x="415" y="785" width="240" height="75" rx="8" fill="white" stroke="#ef9a9a" stroke-width="1.5"/>
+  <text x="425" y="807" font-size="13" font-weight="700" fill="#c62828">Day 20</text>
+  <text x="425" y="825" font-size="12" fill="#333">Deploy</text>
+  <text x="425" y="842" font-size="11" fill="#666">Railway / Render / Fly.io</text>
+
+  <rect x="715" y="785" width="240" height="75" rx="8" fill="white" stroke="#ef9a9a" stroke-width="1.5"/>
+  <text x="725" y="807" font-size="13" font-weight="700" fill="#c62828">Day 21 🎉</text>
+  <text x="725" y="825" font-size="12" fill="#333">Documentation + Portfolio</text>
+  <text x="725" y="842" font-size="11" fill="#666">README + Demo + CV</text>
+
+  <line x1="355" y1="823" x2="415" y2="823" stroke="#c62828" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="655" y1="823" x2="715" y2="823" stroke="#c62828" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- ========== Footer ========== -->
+  <text x="550" y="920" text-anchor="middle" font-size="14" fill="#999">⏱ 1-2 giờ/ngày • 💰 $0 chi phí • 🎯 Portfolio-ready project</text>
+</svg>
+</body>
+</html>

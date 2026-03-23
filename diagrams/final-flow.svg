@@ -1,0 +1,159 @@
+<svg width="1100" height="1700" viewBox="0 0 1100 1700">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+    <marker id="arrow-dash" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+
+  <!-- ========== START ========== -->
+  <ellipse cx="450" cy="50" rx="90" ry="40" fill="#F5C96C" stroke="#D4A84A" stroke-width="2"/>
+  <text x="450" y="55" text-anchor="middle" font-size="16" font-weight="600" fill="#333">Start</text>
+
+  <!-- Arrow: Start → Developer Creates PR -->
+  <line x1="450" y1="90" x2="450" y2="130" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ========== Developer Creates PR (parallelogram) ========== -->
+  <polygon points="340,135 560,135 520,185 300,185" fill="#B3D4F0" stroke="#7BAAD4" stroke-width="2"/>
+  <text x="430" y="166" text-anchor="middle" font-size="14" font-weight="500" fill="#333">Developer Creates PR</text>
+
+  <!-- Arrow → GitHub Sends Webhook -->
+  <line x1="430" y1="185" x2="430" y2="225" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ========== GitHub Sends Webhook (rectangle) ========== -->
+  <rect x="310" y="225" width="240" height="55" rx="4" fill="#B3D4F0" stroke="#7BAAD4" stroke-width="2"/>
+  <text x="430" y="257" text-anchor="middle" font-size="14" font-weight="500" fill="#333">GitHub Sends Webhook</text>
+
+  <!-- Arrow → Verify HMAC -->
+  <line x1="430" y1="280" x2="430" y2="330" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ========== Verify HMAC Signature? (diamond) ========== -->
+  <polygon points="430,330 560,395 430,460 300,395" fill="#D5E8B5" stroke="#A8C97A" stroke-width="2"/>
+  <text x="430" y="391" text-anchor="middle" font-size="13" font-weight="500" fill="#333">Valid HMAC</text>
+  <text x="430" y="407" text-anchor="middle" font-size="13" font-weight="500" fill="#333">Signature?</text>
+
+  <!-- No → Reject (left) -->
+  <line x1="300" y1="395" x2="150" y2="395" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="225" y="385" text-anchor="middle" font-size="13" fill="#c62828" font-weight="600">No</text>
+
+  <rect x="50" y="370" width="100" height="50" rx="4" fill="#FFCDD2" stroke="#E57373" stroke-width="2"/>
+  <text x="100" y="400" text-anchor="middle" font-size="13" font-weight="500" fill="#c62828">❌ Reject</text>
+
+  <!-- Yes → Enqueue Job -->
+  <line x1="430" y1="460" x2="430" y2="510" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="450" y="490" font-size="13" fill="#2e7d32" font-weight="600">Yes</text>
+
+  <!-- ========== Enqueue BullMQ Job (rectangle) ========== -->
+  <rect x="310" y="510" width="240" height="55" rx="4" fill="#FFE0B2" stroke="#FFB74D" stroke-width="2"/>
+  <text x="430" y="535" text-anchor="middle" font-size="14" font-weight="500" fill="#333">📬 Enqueue Job</text>
+  <text x="430" y="553" text-anchor="middle" font-size="12" fill="#666">(BullMQ + Redis)</text>
+
+  <!-- Arrow → Already Reviewed? -->
+  <line x1="430" y1="565" x2="430" y2="615" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ========== Already Reviewed? (diamond) ========== -->
+  <polygon points="430,615 570,680 430,745 290,680" fill="#D5E8B5" stroke="#A8C97A" stroke-width="2"/>
+  <text x="430" y="675" text-anchor="middle" font-size="13" font-weight="500" fill="#333">Already</text>
+  <text x="430" y="693" text-anchor="middle" font-size="13" font-weight="500" fill="#333">Reviewed?</text>
+
+  <!-- Yes → Skip (left) -->
+  <line x1="290" y1="680" x2="150" y2="680" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="220" y="670" text-anchor="middle" font-size="13" fill="#c62828" font-weight="600">Yes</text>
+
+  <rect x="55" y="655" width="95" height="50" rx="4" fill="#E0E0E0" stroke="#9E9E9E" stroke-width="2"/>
+  <text x="102" y="685" text-anchor="middle" font-size="13" font-weight="500" fill="#555">⏭️ Skip</text>
+
+  <!-- No → Fetch PR Diff -->
+  <line x1="430" y1="745" x2="430" y2="795" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="450" y="775" font-size="13" fill="#2e7d32" font-weight="600">No</text>
+
+  <!-- ========== Fetch PR Diff (parallelogram) ========== -->
+  <polygon points="320,800 560,800 520,850 280,850" fill="#B3D4F0" stroke="#7BAAD4" stroke-width="2"/>
+  <text x="420" y="830" text-anchor="middle" font-size="14" font-weight="500" fill="#333">📥 Fetch PR Diff + Files</text>
+
+  <!-- Arrow → Parse Diff -->
+  <line x1="420" y1="850" x2="420" y2="900" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ========== Parse Diff (rectangle) ========== -->
+  <rect x="300" y="900" width="240" height="55" rx="4" fill="#B3D4F0" stroke="#7BAAD4" stroke-width="2"/>
+  <text x="420" y="925" text-anchor="middle" font-size="14" font-weight="500" fill="#333">🔪 Parse Diff</text>
+  <text x="420" y="943" text-anchor="middle" font-size="12" fill="#666">Filter + Detect Language</text>
+
+  <!-- Arrow → Is Code File? -->
+  <line x1="420" y1="955" x2="420" y2="1005" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ========== Is Code File? (diamond) ========== -->
+  <polygon points="420,1005 550,1060 420,1115 290,1060" fill="#D5E8B5" stroke="#A8C97A" stroke-width="2"/>
+  <text x="420" y="1056" text-anchor="middle" font-size="13" font-weight="500" fill="#333">Is Code</text>
+  <text x="420" y="1074" text-anchor="middle" font-size="13" font-weight="500" fill="#333">File?</text>
+
+  <!-- No → Skip File (left) -->
+  <line x1="290" y1="1060" x2="150" y2="1060" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="220" y="1050" text-anchor="middle" font-size="13" fill="#c62828" font-weight="600">No</text>
+
+  <rect x="50" y="1035" width="100" height="50" rx="4" fill="#E0E0E0" stroke="#9E9E9E" stroke-width="2"/>
+  <text x="100" y="1065" text-anchor="middle" font-size="13" font-weight="500" fill="#555">⏭️ Skip</text>
+
+  <!-- Yes → RAG Query -->
+  <line x1="420" y1="1115" x2="420" y2="1165" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="440" y="1145" font-size="13" fill="#2e7d32" font-weight="600">Yes</text>
+
+  <!-- ========== RAG Query (rectangle) ========== -->
+  <rect x="300" y="1165" width="240" height="55" rx="4" fill="#E1BEE7" stroke="#AB47BC" stroke-width="2"/>
+  <text x="420" y="1190" text-anchor="middle" font-size="14" font-weight="500" fill="#333">📚 RAG Query</text>
+  <text x="420" y="1208" text-anchor="middle" font-size="12" fill="#666">pgvector + Conventions</text>
+
+  <!-- Arrow → LLM Review -->
+  <line x1="420" y1="1220" x2="420" y2="1270" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ========== LLM Review (rectangle) ========== -->
+  <rect x="300" y="1270" width="240" height="55" rx="4" fill="#FFCDD2" stroke="#EF5350" stroke-width="2"/>
+  <text x="420" y="1295" text-anchor="middle" font-size="14" font-weight="500" fill="#333">🤖 LLM Review</text>
+  <text x="420" y="1313" text-anchor="middle" font-size="12" fill="#666">Gemini / Ollama</text>
+
+  <!-- Arrow → Post Comments -->
+  <line x1="420" y1="1325" x2="420" y2="1375" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ========== Post Review Comments (parallelogram) ========== -->
+  <polygon points="310,1380 560,1380 520,1430 270,1430" fill="#B3D4F0" stroke="#7BAAD4" stroke-width="2"/>
+  <text x="415" y="1410" text-anchor="middle" font-size="14" font-weight="500" fill="#333">💬 Post Review Comments</text>
+
+  <!-- Arrow → Save to DB -->
+  <line x1="415" y1="1430" x2="415" y2="1480" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ========== Save to Database (rectangle) ========== -->
+  <rect x="295" y="1480" width="240" height="55" rx="4" fill="#B2DFDB" stroke="#4DB6AC" stroke-width="2"/>
+  <text x="415" y="1505" text-anchor="middle" font-size="14" font-weight="500" fill="#333">💾 Save to Database</text>
+  <text x="415" y="1523" text-anchor="middle" font-size="12" fill="#666">PostgreSQL + Prisma</text>
+
+  <!-- Arrow → Stop -->
+  <line x1="415" y1="1535" x2="415" y2="1585" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ========== STOP ========== -->
+  <ellipse cx="415" cy="1625" rx="90" ry="40" fill="#F5C96C" stroke="#D4A84A" stroke-width="2"/>
+  <text x="415" y="1630" text-anchor="middle" font-size="16" font-weight="600" fill="#333">Stop</text>
+
+  <!-- ========== Dashboard branch (right side) ========== -->
+  <line x1="535" y1="1507" x2="700" y2="1507" stroke="#666" stroke-width="2" stroke-dasharray="8,4" marker-end="url(#arrow-dash)"/>
+  <rect x="700" y="1480" width="200" height="55" rx="4" fill="#FFF9C4" stroke="#FDD835" stroke-width="2"/>
+  <text x="800" y="1505" text-anchor="middle" font-size="14" font-weight="500" fill="#333">📊 Dashboard API</text>
+  <text x="800" y="1523" text-anchor="middle" font-size="12" fill="#666">Stats + Reviews List</text>
+
+  <!-- ========== Loop indicator for "Each Code File" ========== -->
+  <rect x="620" y="1145" width="160" height="200" rx="8" fill="none" stroke="#AB47BC" stroke-width="2" stroke-dasharray="6,3"/>
+  <text x="700" y="1170" text-anchor="middle" font-size="12" fill="#6a1b9a" font-weight="600">🔁 Loop</text>
+  <text x="700" y="1188" text-anchor="middle" font-size="11" fill="#6a1b9a">Each Code File</text>
+
+  <!-- Dashed lines connecting loop box -->
+  <line x1="540" y1="1192" x2="620" y2="1192" stroke="#AB47BC" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <line x1="540" y1="1297" x2="620" y2="1297" stroke="#AB47BC" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+  <!-- ========== Retry indicator on LLM ========== -->
+  <path d="M 540 1297 C 580 1297, 580 1270, 540 1270" fill="none" stroke="#EF5350" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrow-dash)"/>
+  <text x="575" y="1260" font-size="10" fill="#c62828">Retry 3x</text>
+
+  <!-- ========== Title ========== -->
+  <text x="550" y="1690" text-anchor="middle" font-size="14" fill="#666">AI Code Review Bot — Final Application Flow</text>
+</svg>

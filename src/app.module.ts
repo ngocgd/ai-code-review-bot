@@ -1,12 +1,12 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { HealthModule } from './health/health.module';
-import { WebhookModule } from './webhook/webhook.module';
-import { ReviewModule } from './review/review.module';
-import { GithubModule } from './github/github.module';
-import { LlmModule } from './llm/llm.module';
-import { QueueModule } from './queue/queue.module';
-import { DatabaseModule } from './database/database.module';
+import { Module } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
+import { HealthModule } from "./health/health.module";
+import { WebhookModule } from "./webhook/webhook.module";
+import { ReviewModule } from "./review/review.module";
+import { GithubModule } from "./github/github.module";
+import { LlmModule } from "./llm/llm.module";
+import { QueueModule } from "./queue/queue.module";
+import { DatabaseModule } from "./database/database.module";
 
 // ============================================================
 // Module Registration Roadmap:

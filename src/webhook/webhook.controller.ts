@@ -1,5 +1,5 @@
-import { Controller, Post, Body, Headers, HttpCode } from '@nestjs/common';
-import { WebhookService } from './webhook.service';
+import { Controller, Post, Body, Headers, HttpCode } from "@nestjs/common";
+import { WebhookService } from "./webhook.service";
 
 // ============================================================
 // DAY 5: Webhook Controller - Receive GitHub Events
@@ -24,7 +24,7 @@ import { WebhookService } from './webhook.service';
 // - Create GitHub App: https://github.com/settings/apps
 // - Set webhook URL: https://your-ngrok-url/webhook/github
 // - Subscribe to: Pull Request events
-// - Use ngrok for local testing: ngrok http 3000
+// - Use ngrok for local testing: ngrok http 3015
 //
 // Learn:
 // - Webhook security (HMAC verification)
@@ -33,15 +33,15 @@ import { WebhookService } from './webhook.service';
 // - Raw body access for signature verification
 // ============================================================
 
-@Controller('webhook')
+@Controller("webhook")
 export class WebhookController {
   constructor(private readonly webhookService: WebhookService) {}
 
-  @Post('github')
+  @Post("github")
   @HttpCode(200)
   async handleGithubWebhook(
-    @Headers('x-github-event') event: string,
-    @Headers('x-hub-signature-256') signature: string,
+    @Headers("x-github-event") event: string,
+    @Headers("x-hub-signature-256") signature: string,
     @Body() payload: any,
   ) {
     // TODO [Day 5]: Verify signature
