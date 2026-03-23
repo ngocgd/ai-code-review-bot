@@ -1,11 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ReviewService } from './review.service';
-
-// ============================================================
-// DAY 13: Review Module - Orchestrator
-// ============================================================
+import { ReviewController } from './review.controller';
 
 @Module({
+  controllers: [ReviewController],
   providers: [ReviewService],
   exports: [ReviewService],
 })

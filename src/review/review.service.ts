@@ -1,119 +1,89 @@
-import { Injectable } from '@nestjs/common';
-
-// ============================================================
-// DAY 13: Review Service - Orchestrate the Full Review Flow
-// ============================================================
-// TODO [Day 13]:
-// This is the main service that ties everything together.
-//
-// Flow:
-// 1. Receive PR info from queue (or webhook directly)
-// 2. Fetch PR diff from GitHub (GithubService)
-// 3. Parse diff into chunks (DiffParserService)
-// 4. Send chunks to LLM for review (LlmService)
-// 5. Save review & comments to database (PrismaService)
-// 6. Post comments back to GitHub PR (GithubService)
-// 7. Submit overall review (approve/request changes)
-//
-// Error handling:
-// - GitHub API fails → retry 3x, then mark review as FAILED
-// - LLM fails → fallback to different provider, or skip
-// - Partial failure → post what we have, log failures
-//
-// Learn:
-// - Orchestrator / Saga pattern
-// - Error handling strategies for multi-step workflows
-// - Idempotency: same PR + same commit = same review (don't duplicate)
-// ============================================================
-
-interface PullRequestInfo {
-  owner: string;
-  repo: string;
-  prNumber: number;
-  prTitle: string;
-  prAuthor: string;
-  headSha: string;
-}
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../database/prisma.service';
+import { CreateReviewDto } from './dto/create-review.dto';
+import { UpdateReviewDto } from './dto/update-review.dto';
+import { CreateReviewCommentDto } from './dto/create-review-comment.dto';
+import { ReviewStatus } from '@prisma/client';
 
 @Injectable()
 export class ReviewService {
-  // constructor(
-  //   private readonly github: GithubService,
-  //   private readonly llm: LlmService,
-  //   private readonly diffParser: DiffParserService,
-  //   private readonly prisma: PrismaService,
-  // ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  /**
-   * Main entry point: review a pull request
-   */
-  async reviewPullRequest(prInfo: PullRequestInfo): Promise<void> {
-    // TODO [Day 13]: Implement full review flow
-    //
-    // Step 1: Check idempotency
-    // const existing = await this.prisma.review.findUnique({
-    //   where: {
-    //     repositoryId_prNumber_commitSha: {
-    //       repositoryId: repoId,
-    //       prNumber: prInfo.prNumber,
-    //       commitSha: prInfo.headSha,
-    //     }
-    //   }
-    // });
-    // if (existing?.status === 'COMPLETED') return; // already reviewed
-    //
-    // Step 2: Create review record (status: PROCESSING)
-    // const review = await this.prisma.review.create({ ... });
-    //
-    // Step 3: Fetch diff
-    // const diff = await this.github.getPullRequestDiff(
-    //   prInfo.owner, prInfo.repo, prInfo.prNumber
-    // );
-    //
-    // Step 4: Parse diff into chunks
-    // const chunks = this.diffParser.parseDiff(diff);
-    //
-    // Step 5: Send to LLM
-    // const result = await this.llm.reviewAllChunks(chunks);
-    //
-    // Step 6: Save comments to DB
-    // for (const issue of result.issues) {
-    //   await this.prisma.reviewComment.create({
-    //     data: { reviewId: review.id, ...issue }
-    //   });
-    // }
-    //
-    // Step 7: Post to GitHub
-    // for (const issue of result.issues) {
-    //   if (issue.line) {
-    //     await this.github.createReviewComment(
-    //       prInfo.owner, prInfo.repo, prInfo.prNumber,
-    //       prInfo.headSha, issue.filePath, issue.line,
-    //       this.formatComment(issue)
-    //     );
-    //   }
-    // }
-    //
-    // Step 8: Submit overall review
-    // await this.github.submitReview(
-    //   prInfo.owner, prInfo.repo, prInfo.prNumber,
-    //   prInfo.headSha, result.summary, result.overallSeverity
-    // );
-    //
-    // Step 9: Update review status
-    // await this.prisma.review.update({
-    //   where: { id: review.id },
-    //   data: { status: 'COMPLETED', summary: result.summary }
-    // });
+  // ==================== Reviews ====================
+
+  async create(dto: CreateReviewDto) {
+    return this.prisma.review.create({ data: dto });
   }
 
-  /**
-   * Format a review issue as GitHub comment markdown
-   */
-  private formatComment(issue: any): string {
-    // TODO [Day 13]: Format issue as markdown
-    // const emoji = { CRITICAL: '🔴', WARNING: '🟡', INFO: '💡' };
-    // return `${emoji[issue.severity]} **${issue.category}**: ${issue.title}\n\n${issue.description}`;
-    return '';
+  async findAll(filters?: { status?: ReviewStatus; repositoryId?: string }) {
+    return this.prisma.review.findMany({
+      where: {
+        ...(filters?.status && { status: filters.status }),
+        ...(filters?.repositoryId && { repositoryId: filters.repositoryId }),
+      },
+      include: { repository: true, _count: { select: { comments: true } } },
+      orderBy: { createdAt: 'desc' },
+      take: 50,
+    });
+  }
+
+  async findById(id: string) {
+    const review = await this.prisma.review.findUnique({
+      where: { id },
+      include: {
+        repository: true,
+        comments: { orderBy: { createdAt: 'asc' } },
+      },
+    });
+    if (!review) throw new NotFoundException(`Review ${id} not found`);
+    return review;
+  }
+
+  async update(id: string, dto: UpdateReviewDto) {
+    await this.findById(id);
+    return this.prisma.review.update({
+      where: { id },
+      data: dto,
+    });
+  }
+
+  // ==================== Review Comments ====================
+
+  async createComment(dto: CreateReviewCommentDto) {
+    // Verify review exists
+    await this.findById(dto.reviewId);
+    return this.prisma.reviewComment.create({ data: dto });
+  }
+
+  async getCommentsByReview(reviewId: string) {
+    return this.prisma.reviewComment.findMany({
+      where: { reviewId },
+      orderBy: { createdAt: 'asc' },
+    });
+  }
+
+  // ==================== Stats ====================
+
+  async getStats() {
+    const [total, byStatus, recentReviews] = await Promise.all([
+      this.prisma.review.count(),
+      this.prisma.review.groupBy({
+        by: ['status'],
+        _count: true,
+      }),
+      this.prisma.review.findMany({
+        take: 5,
+        orderBy: { createdAt: 'desc' },
+        include: { repository: true, _count: { select: { comments: true } } },
+      }),
+    ]);
+
+    return {
+      totalReviews: total,
+      byStatus: Object.fromEntries(
+        byStatus.map((s) => [s.status, s._count]),
+      ),
+      recentReviews,
+    };
   }
 }
