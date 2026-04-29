@@ -38,7 +38,7 @@ import { DatabaseModule } from "./database/database.module";
     WebhookModule,
     GithubModule,
     LlmModule,
-    // QueueModule,      // Day 12
+    QueueModule,
   ],
 })
 export class AppModule {}

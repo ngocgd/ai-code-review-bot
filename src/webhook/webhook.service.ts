@@ -1,31 +1,35 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import * as crypto from 'crypto';
+import { Injectable, Logger } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { InjectQueue } from "@nestjs/bullmq";
+import { Queue } from "bullmq";
+import * as crypto from "crypto";
 
 @Injectable()
 export class WebhookService {
   private readonly logger = new Logger(WebhookService.name);
 
-  constructor(private configService: ConfigService) {}
-
+  constructor(
+    private configService: ConfigService,
+    @InjectQueue("review-pr") private reviewQueue: Queue,
+  ) {}
   /**
    * Verify GitHub webhook signature (HMAC SHA-256)
    * GitHub signs payload with shared secret → we verify to reject forgeries
    */
   verifySignature(rawBody: Buffer, signature: string): boolean {
-    const secret = this.configService.get<string>('GITHUB_WEBHOOK_SECRET');
+    const secret = this.configService.get<string>("GITHUB_WEBHOOK_SECRET");
     if (!secret) {
-      this.logger.warn('GITHUB_WEBHOOK_SECRET not set — skipping verification');
+      this.logger.warn("GITHUB_WEBHOOK_SECRET not set — skipping verification");
       return true;
     }
 
     if (!signature) {
-      this.logger.warn('Missing X-Hub-Signature-256 header');
+      this.logger.warn("Missing X-Hub-Signature-256 header");
       return false;
     }
 
-    const hmac = crypto.createHmac('sha256', secret);
-    const digest = 'sha256=' + hmac.update(rawBody).digest('hex');
+    const hmac = crypto.createHmac("sha256", secret);
+    const digest = "sha256=" + hmac.update(rawBody).digest("hex");
 
     try {
       return crypto.timingSafeEqual(
@@ -61,9 +65,23 @@ export class WebhookService {
       `PR #${prInfo.prNumber} [${prInfo.action}] on ${prInfo.fullName}: "${prInfo.prTitle}" by @${prInfo.prAuthor}`,
     );
 
-    // TODO [Day 12]: Add to BullMQ queue
-    // await this.reviewQueue.add('review-pr', prInfo);
-
-    return prInfo;
+    const job = await this.reviewQueue.add("review", prInfo, {
+      attempts: 3,
+      backoff: {
+        type: "exponential",
+        delay: 5000,
+      },
+      removeOnComplete: {
+        age: 24 * 3600,
+        count: 100,
+      },
+      removeOnFail: {
+        age: 7 * 24 * 3600,
+      },
+    });
+    this.logger.log(
+      `📋 Job ${job.id} added to queue for PR #${prInfo.prNumber}`,
+    );
+    return { ...prInfo, jobId: job.id };
   }
 }

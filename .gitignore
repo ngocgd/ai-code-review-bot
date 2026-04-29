@@ -6,3 +6,4 @@ coverage/
 .prisma/
 secrets/
 *.pem
+CLAUDE.md
