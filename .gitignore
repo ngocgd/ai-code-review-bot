@@ -4,3 +4,6 @@ dist/
 *.js.map
 coverage/
 .prisma/
+secrets/
+*.pem
+CLAUDE.md

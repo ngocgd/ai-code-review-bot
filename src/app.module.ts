@@ -36,9 +36,9 @@ import { DatabaseModule } from "./database/database.module";
 
     // Feature modules (uncomment as you build)
     WebhookModule,
-    // GithubModule,     // Day 7-8
-    // LlmModule,        // Day 9-11
-    // QueueModule,      // Day 12
+    GithubModule,
+    LlmModule,
+    QueueModule,
   ],
 })
 export class AppModule {}
