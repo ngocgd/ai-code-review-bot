@@ -33,7 +33,7 @@ describe('GithubService', () => {
           provide: ConfigService,
           useValue: {
             get: jest.fn((key: string, defaultVal?: string) => {
-              const config = {
+              const config: Record<string, string> = {
                 GITHUB_APP_ID: '123456',
                 GITHUB_INSTALLATION_ID: '789012',
                 GITHUB_PRIVATE_KEY_PATH: './secrets/github-app.pem',
