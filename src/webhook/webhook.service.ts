@@ -1,56 +1,69 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
-
-// ============================================================
-// DAY 5-6: Webhook Service
-// ============================================================
-// TODO [Day 5]:
-// 1. verifySignature() — HMAC SHA-256 verification
-// 2. handlePullRequest() — extract PR info, add to queue
-//
-// TODO [Day 6]:
-// 3. Write unit tests for verifySignature
-// 4. Write integration test: webhook → queue → review
-//
-// Learn:
-// - HMAC (Hash-based Message Authentication Code)
-// - crypto module in Node.js
-// - How GitHub signs webhook payloads
-// ============================================================
 
 @Injectable()
 export class WebhookService {
+  private readonly logger = new Logger(WebhookService.name);
+
+  constructor(private configService: ConfigService) {}
+
   /**
-   * Verify GitHub webhook signature
-   * GitHub sends HMAC SHA-256 signature in X-Hub-Signature-256 header
+   * Verify GitHub webhook signature (HMAC SHA-256)
+   * GitHub signs payload with shared secret → we verify to reject forgeries
    */
-  verifySignature(payload: any, signature: string): boolean {
-    // TODO [Day 5]: Implement HMAC verification
-    // const secret = process.env.GITHUB_WEBHOOK_SECRET;
-    // const hmac = crypto.createHmac('sha256', secret);
-    // const digest = 'sha256=' + hmac.update(JSON.stringify(payload)).digest('hex');
-    // return crypto.timingSafeEqual(Buffer.from(digest), Buffer.from(signature));
-    return true;
+  verifySignature(rawBody: Buffer, signature: string): boolean {
+    const secret = this.configService.get<string>('GITHUB_WEBHOOK_SECRET');
+    if (!secret) {
+      this.logger.warn('GITHUB_WEBHOOK_SECRET not set — skipping verification');
+      return true;
+    }
+
+    if (!signature) {
+      this.logger.warn('Missing X-Hub-Signature-256 header');
+      return false;
+    }
+
+    const hmac = crypto.createHmac('sha256', secret);
+    const digest = 'sha256=' + hmac.update(rawBody).digest('hex');
+
+    try {
+      return crypto.timingSafeEqual(
+        Buffer.from(digest),
+        Buffer.from(signature),
+      );
+    } catch {
+      return false;
+    }
   }
 
   /**
-   * Handle pull_request event
-   * Extract PR info and queue for review
+   * Extract PR info from webhook payload
    */
   async handlePullRequest(payload: any) {
-    // TODO [Day 5]: Extract PR info
-    // const prInfo = {
-    //   owner: payload.repository.owner.login,
-    //   repo: payload.repository.name,
-    //   prNumber: payload.pull_request.number,
-    //   prTitle: payload.pull_request.title,
-    //   prAuthor: payload.pull_request.user.login,
-    //   headSha: payload.pull_request.head.sha,
-    //   baseBranch: payload.pull_request.base.ref,
-    //   headBranch: payload.pull_request.head.ref,
-    // };
-    //
-    // TODO [Day 12]: Add to BullMQ queue instead of processing here
+    const pr = payload.pull_request;
+    const repo = payload.repository;
+
+    const prInfo = {
+      owner: repo.owner.login,
+      repo: repo.name,
+      fullName: repo.full_name,
+      prNumber: pr.number,
+      prTitle: pr.title,
+      prAuthor: pr.user.login,
+      headSha: pr.head.sha,
+      baseBranch: pr.base.ref,
+      headBranch: pr.head.ref,
+      action: payload.action,
+    };
+
+    this.logger.log(
+      `PR #${prInfo.prNumber} [${prInfo.action}] on ${prInfo.fullName}: "${prInfo.prTitle}" by @${prInfo.prAuthor}`,
+    );
+
+    // TODO [Day 12]: Add to BullMQ queue
     // await this.reviewQueue.add('review-pr', prInfo);
+
+    return prInfo;
   }
 }
